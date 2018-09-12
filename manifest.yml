@@ -1,0 +1,8 @@
+---
+applications:
+- name: test3
+  path: build/libs/pal-tracker.jar
+  random-route: true
+  disk_quota: 512M
+  env:
+    WELCOME_MESSAGE: Hello from Cloud Foundry
