@@ -23,11 +23,11 @@ jobs:
         api_key: $GITHUB_OAUTH_TOKEN
         file: "build/libs/pal-tracker.jar"
         skip_cleanup: true
-    - stage: deploy to review
+    - stage: deploy to test3
       language: bash
       script:
         - echo "Downloading $RELEASE_TAG"
-        - wget -P build/libs https://github.com/$GITHUB_USERNAME/pal-tracker/releases/download/$RELEASE_TAG/pal-tracker.jar
+        - wget -P build/libs https://github.com/$GITHUB_USERNAME/pal-tracker3/releases/download/$RELEASE_TAG/pal-tracker.jar
       before_deploy:
         - echo "Deploying $RELEASE_TAG to review"
       deploy:
@@ -36,4 +36,4 @@ jobs:
         username: $CF_USERNAME
         password: $CF_PASSWORD
         organization: $CF_ORG
-        space: review
+        space: test3
