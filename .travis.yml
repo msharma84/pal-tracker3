@@ -32,6 +32,7 @@ jobs:
     - stage: deploy to test3
       language: java
       before_install:
+        - chmod +x gradlew
         - wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
         - echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
         - sudo apt-get update
@@ -44,8 +45,8 @@ jobs:
       before_deploy:
         - echo "Deploying $RELEASE_TAG to test3"
       after_success:
-        - cf login -a $CF_API_URL -u $CF_USERNAME -p $CF_PASSWORD -o $CF_ORG -s test3
-        - scripts/migrate-databases.sh pal-tracker .
+        - cf login -a $CF_API_URL -u $CF_USERNAME -p $CF_PASSWORD -o $CF_ORG -s test3 --skip_ssl_validation
+        - scripts/migrate-databases.sh test3 .
       deploy:
         provider: cloudfoundry
         api: $CF_API_URL
