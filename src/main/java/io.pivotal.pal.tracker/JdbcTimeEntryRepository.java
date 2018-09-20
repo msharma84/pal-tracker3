@@ -13,17 +13,16 @@ import java.util.List;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-public class JdbcTimeEntryRepository implements TimeEntryRepository{
+public class JdbcTimeEntryRepository implements TimeEntryRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcTimeEntryRepository(DataSource dataSource){
+    public JdbcTimeEntryRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
     public TimeEntry create(TimeEntry timeEntry) {
-
         KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -46,23 +45,19 @@ public class JdbcTimeEntryRepository implements TimeEntryRepository{
 
     @Override
     public TimeEntry find(Long id) {
-
-        String query = "SELECT ID, PROJECT_ID, USER_ID, DATE, HOURS FROM TIME_ENTRIES WHERE ID =?";
-        TimeEntry entry = jdbcTemplate.query(query, new Object[] {id}, extractor);
-        return entry;
+        return jdbcTemplate.query(
+                "SELECT id, project_id, user_id, date, hours FROM time_entries WHERE id = ?",
+                new Object[]{id},
+                extractor);
     }
 
     @Override
     public List<TimeEntry> list() {
-
-        final String query = "SELECT ID, PROJECT_ID, USER_ID, DATE, HOURS FROM TIME_ENTRIES";
-        List<TimeEntry> list = jdbcTemplate.query(query, mapper);
-        return list;
+        return jdbcTemplate.query("SELECT id, project_id, user_id, date, hours FROM time_entries", mapper);
     }
 
     @Override
     public TimeEntry update(Long id, TimeEntry timeEntry) {
-
         jdbcTemplate.update("UPDATE time_entries " +
                         "SET project_id = ?, user_id = ?, date = ?,  hours = ? " +
                         "WHERE id = ?",
@@ -77,8 +72,7 @@ public class JdbcTimeEntryRepository implements TimeEntryRepository{
 
     @Override
     public void delete(Long id) {
-        String query = "DELETE FROM TIME_ENTRIES WHERE ID =?";
-        jdbcTemplate.update(query,id);
+        jdbcTemplate.update("DELETE FROM time_entries WHERE id = ?", id);
     }
 
     private final RowMapper<TimeEntry> mapper = (rs, rowNum) -> new TimeEntry(
